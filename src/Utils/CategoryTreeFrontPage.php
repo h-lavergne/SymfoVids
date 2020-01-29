@@ -17,7 +17,7 @@ class CategoryTreeFrontPage extends CategoryTreeAbstract
     public $html_ul_close = '</ul>';
 
     public function getCategoryListAndParent($id): string {
-        $this->slugger = new AppExtension();
+        $this->slugger = new AppExtension(); //set Instance of AppExtension for filters
         $parentData = $this->getMainParent($id);
         $this->mainParentName = $parentData["name"];
         $this->mainParentId = $parentData["id"];
