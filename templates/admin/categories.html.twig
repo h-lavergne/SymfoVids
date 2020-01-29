@@ -11,25 +11,34 @@
 
 {% block mainadmin %}
     <h2>Categories list</h2>
-    <!-- LIST OF CATEGORIES -->
-    {{ categories.categoryList|raw }}
 
-
-    <form action="#" method="POST">
-        <div class="col-md-4 mb-3">
-            <label for="validationServer01">Add new category</label>
-            <input type="text" class="form-control is-invalid" id="validationServer01" placeholder="Category name"
-                   value="Funny"
-                   required>
-            <br>
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-6 mx-auto mb-3">
+            {{ form_start(form, {"attr": {"novalidate": "novalidate", "class": "form"}}) }}
+            {{ form_row(form.name, {
+                "label": "Name:",
+                "attr": {
+                    "class": "form-control mb-2",
+                    "placeholder": "Category Name"
+                }
+            }) }}
             <label for="inlineFormCustomSelect">Parent:</label>
             <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
                 {{ render(controller("App\\Controller\\AdminController::getAllCategories")) }}
             </select>
             <div class="invalid-feedback">
-                Category already exists!
+                {{ form_errors(form) }}
             </div>
-            <button class="btn btn-primary mt-3" type="submit">Add</button>
+            <input type="submit" class="btn btn-primary mt-3" value="Validate">
+            {{ form_end(form) }}
         </div>
-    </form>
+
+    </div>
+
+
+    <!-- LIST OF CATEGORIES -->
+    {{ categories.categoryList|raw }}
+
+
+
 {% endblock %}
