@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ * @ORM\Table(name="categories")
  */
 class Category
 {
@@ -34,7 +35,7 @@ class Category
     private $sub_category;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="category")
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="categories")
      */
     private $videos;
 
