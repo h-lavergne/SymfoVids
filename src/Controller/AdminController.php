@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Utils\CategoryTreeAdminList;
+use App\Utils\CategoryTreeAdminOptionList;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -57,7 +58,6 @@ class AdminController extends AbstractController
     public function categories(CategoryTreeAdminList $categories)
     {
         $categories->getCategoryList($categories->buildTree());
-        dump($categories);
         return $this->render('admin/categories.html.twig', [
             "categories" => $categories
         ]);
@@ -82,5 +82,13 @@ class AdminController extends AbstractController
         $em->remove($category);
         $em->flush();
         return $this->redirectToRoute("categories");
+    }
+
+    public function getAllCategories(CategoryTreeAdminOptionList $categories){
+        $categories->getCategoryList($categories->buildTree());
+        dump($categories);
+        return $this->render("admin/_all_categories.html.twig", [
+            "categories" => $categories
+        ]);
     }
 }

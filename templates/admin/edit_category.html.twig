@@ -11,12 +11,7 @@
             <br>
             <label for="inlineFormCustomSelect">Parent:</label>
             <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                <option value="1">Funny</option>
-                <option value="1">--For kids</option>
-                <option value="1">--For adults</option>
-                <option value="1">----For 60+</option>
-                <option value="2">Scary</option>
-                <option value="3">Motivating</option>
+                {{ render(controller("App\\Controller\\AdminController::getAllCategories")) }}
             </select>
             <div class="invalid-feedback">
                 Category already exists!
