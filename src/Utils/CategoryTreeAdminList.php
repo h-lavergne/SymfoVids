@@ -7,6 +7,8 @@ use App\Utils\AbstractClasses\CategoryTreeAbstract;
 class CategoryTreeAdminList extends CategoryTreeAbstract
 {
 
+    // set le html en variable pour changer facilement si besoin
+
     public $html_1 = '<ul class="fa-ul text-left mb-5">';
     public $html_2 = '<li><i class="fa-li fa fa-arrow-right"></i>';
     public $html_3 = '<a href="';
@@ -18,10 +20,11 @@ class CategoryTreeAdminList extends CategoryTreeAbstract
     public $html_9 = '</ul>';
 
 
+    //implemente la fonction abstraite de la classe parent -> set le html pour le display --SIMPLE HTML--
     public function getCategoryList(array $categoriesArray)
     {
         $this->categoryList .= $this->html_1;
-                                    //<ul>
+
         foreach ($categoriesArray as $value) {
 
             $url_edit = $this->generator->generate("edit_category", ["id" => $value["id"]]);
