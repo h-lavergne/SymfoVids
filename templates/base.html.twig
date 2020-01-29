@@ -36,8 +36,7 @@
             </form>
 
             <nav class="my-2 my-md-0 mr-md-3">
-                <a class="p-2 text-dark" href="{{ path("video_list") }}">Videos list</a>
-                <a class="p-2 text-dark" href="{{ path("admin_main_page") }}">My account</a>
+                {{ render(controller("App\\Controller\\FrontController::mainCategories")) }}
             </nav>
             <a class="btn btn-outline-primary mr-2" href="{{ path("pricing") }}">Sign up</a>
             <a class="btn btn-outline-primary" href="{{ path("login") }}">Sign in</a>
