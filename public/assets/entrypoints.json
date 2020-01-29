@@ -1,0 +1,20 @@
+{
+  "entrypoints": {
+    "css/dashboard": {
+      "css": [
+        "/assets/css/dashboard.css"
+      ],
+      "js": [
+        "/assets/css/dashboard.js"
+      ]
+    },
+    "css/login": {
+      "css": [
+        "/assets/css/login.css"
+      ],
+      "js": [
+        "/assets/css/login.js"
+      ]
+    }
+  }
+}

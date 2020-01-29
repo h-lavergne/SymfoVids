@@ -1,0 +1,20 @@
+{% extends "admin/base.html.twig" %}
+{% block mainadmin %}
+
+
+            <h2>Upload a video</h2>
+
+    <div class="row align-items-center justify-content-center">
+        <form method="POST" action="#" enctype="multipart/form-data" class="w-50">
+            <div class="form-group">
+                <div class="custom-file">
+                    <input type="file" name="file_data" class="custom-file-input" id="customFile" onchange="console.log(this)">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+
+{% endblock %}
