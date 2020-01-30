@@ -4,22 +4,27 @@
 
 <h2>Editing category</h2>
 
-    <div class="row justify-content-center align-items-center">
-
-
-        <form action="#" class="w-50" method="POST">
-
-            <br>
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-6 mx-auto mb-3">
+            {{ form_start(form, {"attr": {"novalidate": "novalidate", "class": "form"}}) }}
+            {{ form_row(form.name, {
+                "label": "Name:",
+                "attr": {
+                    "class": "form-control mb-2",
+                    "placeholder": "Category Name"
+                }
+            }) }}
             <label for="inlineFormCustomSelect">Parent:</label>
-            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+            <select name="category[parent]" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
                 {{ render(controller("App\\Controller\\AdminController::getAllCategories", {"editedCategory": category})) }}
             </select>
-            <div class="invalid-feedback">
-                Category already exists!
+            <div class="invalid-feedback text-info">
+                {{ form_errors(form.name) }}
             </div>
-            <button class="btn btn-primary mt-3" type="submit">Save</button>
+            <input type="submit" class="btn btn-primary mt-3" value="Validate">
+            {{ form_end(form) }}
+        </div>
 
-        </form>
     </div>
 
 

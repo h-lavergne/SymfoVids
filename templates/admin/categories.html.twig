@@ -23,11 +23,11 @@
                 }
             }) }}
             <label for="inlineFormCustomSelect">Parent:</label>
-            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+            <select name="category[parent]" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
                 {{ render(controller("App\\Controller\\AdminController::getAllCategories")) }}
             </select>
-            <div class="invalid-feedback">
-                {{ form_errors(form) }}
+            <div class="invalid-feedback text-info">
+                {{ form_errors(form.name) }}
             </div>
             <input type="submit" class="btn btn-primary mt-3" value="Validate">
             {{ form_end(form) }}

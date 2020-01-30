@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Repository\CategoryRepository;
 use App\Utils\CategoryTreeAdminList;
 use App\Utils\CategoryTreeAdminOptionList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,35 +57,44 @@ class AdminController extends AbstractController
      * @Route("/categories", name="categories", methods={"GET","POST"})
      * @param CategoryTreeAdminList $categories
      * @param Request $request
+     * @param CategoryRepository $repository
+     * @param EntityManagerInterface $em
      * @return Response
      */
-    public function categories(CategoryTreeAdminList $categories, Request $request)
+    public function categories(CategoryTreeAdminList $categories, Request $request, CategoryRepository $repository, EntityManagerInterface $em)
     {
         $categories->getCategoryList($categories->buildTree());
 
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
-            dd("ok");
+
+        if ($this->saveCategory($form, $category, $request, $repository, $em)){
+            return $this->redirectToRoute("categories");
         }
 
         return $this->render('admin/categories.html.twig', [
             "categories" => $categories,
-            "form" => $form->createView()
+            "form" => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/edit-category/{id}", name="edit_category")
+     * @Route("/edit-category/{id}", name="edit_category", methods={"GET", "POST"})
      * @param Category $category
+     * @param Request $request
+     * @param CategoryRepository $repository
+     * @param EntityManagerInterface $em
      * @return Response
      */
-    public function editCategory(Category $category)
+    public function editCategory(Category $category, Request $request, CategoryRepository $repository, EntityManagerInterface $em)
     {
+        $form = $this->createForm(CategoryType::class, $category);
 
-        dump($category);
+        if ($this->saveCategory($form, $category, $request, $repository, $em)){
+            return $this->redirectToRoute("categories");
+        }
+
         return $this->render('admin/edit_category.html.twig', [
             "category" => $category,
             "form" => $form->createView()
@@ -108,9 +118,30 @@ class AdminController extends AbstractController
 
     public function getAllCategories(CategoryTreeAdminOptionList $categories, $editedCategory = null){
         $categories->getCategoryList($categories->buildTree());
+        dump($editedCategory);
         return $this->render("admin/_all_categories.html.twig", [
             "categories" => $categories,
             "editedCategory" => $editedCategory
         ]);
+    }
+
+    private function saveCategory($form, $category, $request, $repository, $em){
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+
+            $category->setName($request->request->get("category")["name"]);
+            $parent = $repository->find($request->request->get("category")["parent"]);
+            $category->setParent($parent);
+
+            $em->persist($category);
+            $em->flush();
+
+            return true;
+        }
+
+        return false;
+
     }
 }

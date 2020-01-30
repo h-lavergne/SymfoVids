@@ -13,7 +13,7 @@ class CategoryTreeAdminList extends CategoryTreeAbstract
     public $html_2 = '<li><i class="fa-li fa fa-arrow-right"></i>';
     public $html_3 = '<a href="';
     public $html_4 = '">';
-    public $html_5 = '</a> <a onclick="return confirm(\' Are you sure ? \')" href="';
+    public $html_5 = '</a> <a class="text-danger" onclick="return confirm(\' Are you sure ? \')" href="';
     public $html_6 = '">';
     public $html_7 = '</a>';
     public $html_8 = '</li>';

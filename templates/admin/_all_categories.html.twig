@@ -1,5 +1,7 @@
 {% if editedCategory.parent is defined and editedCategory.parent == null %}
-    <option value="0">No Parents</option>
+    <option selected value="0">No Parent</option>
+{% else %}
+    <option value="0">No Parent</option>
 {% endif %}
 
     {% for category in categories.categoryList %}
