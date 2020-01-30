@@ -118,7 +118,6 @@ class AdminController extends AbstractController
 
     public function getAllCategories(CategoryTreeAdminOptionList $categories, $editedCategory = null){
         $categories->getCategoryList($categories->buildTree());
-        dump($editedCategory);
         return $this->render("admin/_all_categories.html.twig", [
             "categories" => $categories,
             "editedCategory" => $editedCategory
@@ -131,7 +130,6 @@ class AdminController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
 
-            $category->setName($request->request->get("category")["name"]);
             $parent = $repository->find($request->request->get("category")["parent"]);
             $category->setParent($parent);
 
