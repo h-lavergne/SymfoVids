@@ -28,15 +28,7 @@
                     </div>
 
                     <div class="form-row align-items-center ml-3">
-                        <form action="#" method="POST">
-                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect"
-                                    onchange='this.form.submit();'>
-                                <option selected>Sort...</option>
-                                <option value="1">Highest rated</option>
-                                <option value="2">Title A-Z</option>
-                                <option value="3">Title Z-A</option>
-                            </select>
-                        </form>
+                        {% include("front/includes/_sort.html.twig") %}
                     </div>
                 </div>
             </div>
