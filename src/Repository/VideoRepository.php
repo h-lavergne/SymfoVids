@@ -25,12 +25,13 @@ class VideoRepository extends ServiceEntityRepository
     public function findByChildIds(array $value, int $page, ?string $sort_method)
     {
 
+        //filtre si ce n'est pas par rating alors par ASC
         $sort_method = $sort_method != "rating" ? $sort_method : "ASC";
 
         $dbQuery = $this->createQueryBuilder('v')
-            ->andWhere("v.category IN (:val)")
-            ->setParameter('val', $value)
-            ->orderBy("v.title", $sort_method)
+            ->andWhere("v.category IN (:val)")//cherche si v.category existe dans le tableau d'id as values
+            ->setParameter('val', $value)//bind val
+            ->orderBy("v.title", $sort_method) // sql orderBy
             ->getQuery();
 
         $pagination = $this->paginator->paginate($dbQuery, $page, 5);
@@ -40,15 +41,20 @@ class VideoRepository extends ServiceEntityRepository
 
     public function findByTitle(string $query, int $page, ?string $sort_method)
     {
+        //filtre si ce n'est pas par rating alors par ASC
         $sort_method = $sort_method != "rating" ? $sort_method : "ASC";
         $queryBuilder = $this->createQueryBuilder("v");
         $searchTerms = $this->prepareQuery($query);
 
-        foreach ($searchTerms as $key => $term){
+        //pour chaque element du tableau créés dans prepareQuery
+        foreach ($searchTerms as $key => $term) {
             $queryBuilder
-                ->orWhere("v.title LIKE :t_" . $key)
-                ->setParameter("t_" . $key, "%" . trim($term) . '%');
+                ->orWhere("v.title LIKE :t_" . $key)//cherche element dans title des videos
+                    //assigne a "t_" -> trim(term), % -> joker = n'importe quel caractere
+                ->setParameter("t_" . $key, "%" . trim($term) . '%');//trim supprime les espaces en debut et fin de chaine
+            dump($term);
         }
+
 
         $dbQuery = $queryBuilder
             ->orderBy("v.title", $sort_method)
@@ -60,6 +66,7 @@ class VideoRepository extends ServiceEntityRepository
 
     private function prepareQuery(string $query): array
     {
+        //va creer un tableau avec chaque caractere delimité par un espace
         return explode(' ', $query);
     }
 

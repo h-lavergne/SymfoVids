@@ -32,9 +32,13 @@ class FrontController extends AbstractController
     public function videoList($id, CategoryTreeFrontPage $categories, VideoRepository $videoRepository, $page, Request $request)
     {
         $categories->getCategoryListAndParent($id);
+        // recupere les id enfant
         $ids = $categories->getChildIds($id);
-        array_push($ids, $id);
+        //Permet d'empiler un ou plusieurs element a la fin d'un tableau
+        array_push($ids, $id); // envoie id a la fin de ids
 
+
+        //check func
         $videos = $videoRepository->findByChildIds($ids, $page, $request->get("sortBy"));
 
         return $this->render('front/video_list.html.twig', [
@@ -64,13 +68,13 @@ class FrontController extends AbstractController
         $videos = null;
         $query = null;
 
+        //cherche name=query
         if ($query = $request->get("query")) {
             $videos = $repository->findByTitle($query, $page, $request->get("sortBy"));
 
             if (!$videos->getItems()) $videos = null;
         }
 
-        dump($videos);
 
         return $this->render('front/search_results.html.twig', [
             "videos" => $videos,

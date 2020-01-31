@@ -83,10 +83,12 @@ class CategoryTreeFrontPage extends CategoryTreeAbstract
     public function getChildIds(int $parent): array
     {
         static $ids = [];
+        //pour chaque category en DB
         foreach ($this->categoriesArrayFromDb as $val) {
+            //si l'id passé en params = l'id d'un parent
             if ($val["parent_id"] == $parent) {
-                $ids[] = $val["id"] . ",";
-                $this->getChildIds($val["id"]);
+                $ids[] = $val["id"] . ","; //on injecte ces ids dans le tableau
+                $this->getChildIds($val["id"]); // on recommence la boucle
             }
             return $ids;
         }
