@@ -36,10 +36,10 @@ class FrontController extends AbstractController
         array_push($ids, $id);
 
         $videos = $videoRepository->findByChildIds($ids, $page, $request->get("sortBy"));
-        dump($videos);
+
         return $this->render('front/video_list.html.twig', [
             "subcategories" => $categories,
-            "videos"=>$videos
+            "videos" => $videos
         ]);
     }
 
@@ -51,13 +51,33 @@ class FrontController extends AbstractController
         return $this->render('front/video_details.html.twig');
     }
 
+
     /**
-     * @Route("/search-results", name="search_results", methods={"POST"})
+     * @Route("/search-results/{page}", name="search_results", methods={"GET"}, defaults={"page":"1"})
+     * @param $page
+     * @param Request $request
+     * @param VideoRepository $repository
+     * @return Response
      */
-    public function searchResults()
+    public function searchResults($page, Request $request, VideoRepository $repository)
     {
-        return $this->render('front/search_results.html.twig');
+        $videos = null;
+        $query = null;
+
+        if ($query = $request->get("query")) {
+            $videos = $repository->findByTitle($query, $page, $request->get("sortBy"));
+
+            if (!$videos->getItems()) $videos = null;
+        }
+
+        dump($videos);
+
+        return $this->render('front/search_results.html.twig', [
+            "videos" => $videos,
+            "query" => $query
+        ]);
     }
+
 
     /**
      * @Route("/pricing", name="pricing")
@@ -92,8 +112,9 @@ class FrontController extends AbstractController
     }
 
 
-    public function mainCategories(){
-        $categories = $this->getDoctrine()->getRepository(Category::class)->findBy(["parent" => null], ["name"=>"ASC"]);
+    public function mainCategories()
+    {
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findBy(["parent" => null], ["name" => "ASC"]);
         return $this->render("front/_main_categories.html.twig", [
             "categories" => $categories
         ]);

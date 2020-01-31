@@ -1,45 +1,53 @@
 {% if videos.items == null %}
-    <div class="text-danger text-center w-100">No videos to display in this category</div>
+<div class="text-danger text-center w-100">No videos to display in this category</div>
 {% else %}
 
-    {% for video in videos %}
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div align="center" class="embed-responsive embed-responsive-16by9">
-                    <iframe class="" src="{{ video.path }}" frameborder="0"
-                            allowfullscreen></iframe>
-                </div>
-                <div class="card-body">
-                    <h3>{{ video.title }}</h3>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="btn-group">
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            {% for video in videos %}
 
-                            <i class="fa fa-thumbs-up"><small class="text-muted">(23)</small></i>&nbsp;
-                            <i class="fa fa-thumbs-down"><small class="text-muted">(9)</small></i>
-                            <button data-toggle="tooltip" data-placement="top"
-                                    title="Click to like the video"
-                                    type="button"
-                                    class="btn btn-primary btn-outline-success btn-sm ml-1">
-                                <i class="fa fa-thumbs-up"></i>
-                            </button>
-                            <!-- <button data-toggle="tooltip" data-placement="top" title="You like the video. Click to unlike" type="button" class="btn btn-primary btn-outline-success btn-sm mr-2">
-                            <i class="fa fa-thumbs-up"></i>
-                            </button> -->
-                            <button data-toggle="tooltip" data-placement="top"
-                                    title="Click to dislike the video"
-                                    type="button"
-                                    class="btn btn-primary btn-outline-danger btn-sm ml-1 mr-1">
-                                <i class="fa fa-thumbs-down"></i>
-                            </button>
-                            <!-- <button data-toggle="tooltip" data-placement="top" title="You don't like the video. Click to undo" type="button" class="btn btn-primary btn-outline-danger btn-sm mr-2">
-                            <i class="fa fa-thumbs-down"></i>
-                            </button> -->
-                            <a href="{{ path("video_details") }}#video_comments">Comments (32)</a>
+                <div class="col-12 col-md-6 col-lg-4 col-sm-12">
+                    <div class="card mb-4 shadow-sm">
+                        <div align="center" class="embed-responsive embed-responsive-16by9">
+                            <iframe class="" src="{{ video.path }}" frameborder="0"
+                                    allowfullscreen></iframe>
                         </div>
-                        <small class="text-muted">{{ video.duration }} mins</small>
+                        <div class="card-body">
+                            <h3>{{ video.title }}</h3>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+
+                                    <i class="fa fa-thumbs-up"><small class="text-muted">(23)</small></i>&nbsp;
+                                    <i class="fa fa-thumbs-down"><small class="text-muted">(9)</small></i>
+                                    <button data-toggle="tooltip" data-placement="top"
+                                            title="Click to like the video"
+                                            type="button"
+                                            class="btn btn-primary btn-outline-success btn-sm ml-1">
+                                        <i class="fa fa-thumbs-up"></i>
+                                    </button>
+                                    <!-- <button data-toggle="tooltip" data-placement="top" title="You like the video. Click to unlike" type="button" class="btn btn-primary btn-outline-success btn-sm mr-2">
+                                    <i class="fa fa-thumbs-up"></i>
+                                    </button> -->
+                                    <button data-toggle="tooltip" data-placement="top"
+                                            title="Click to dislike the video"
+                                            type="button"
+                                            class="btn btn-primary btn-outline-danger btn-sm ml-1 mr-1">
+                                        <i class="fa fa-thumbs-down"></i>
+                                    </button>
+                                    <!-- <button data-toggle="tooltip" data-placement="top" title="You don't like the video. Click to undo" type="button" class="btn btn-primary btn-outline-danger btn-sm mr-2">
+                                    <i class="fa fa-thumbs-down"></i>
+                                    </button> -->
+                                    <a href="{{ path("video_details") }}#video_comments">Comments (32)</a>
+                                </div>
+                                <small class="text-muted">{{ video.duration }} mins</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
+            {% endif %}
         </div>
-    {% endfor %}
-{% endif %}
+    </div>
+
+</div>

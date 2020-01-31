@@ -22,7 +22,8 @@ class VideoRepository extends ServiceEntityRepository
     }
 
 
-    public function findByChildIds(array $value, int $page, ?string $sort_method){
+    public function findByChildIds(array $value, int $page, ?string $sort_method)
+    {
 
         $sort_method = $sort_method != "rating" ? $sort_method : "ASC";
 
@@ -36,6 +37,32 @@ class VideoRepository extends ServiceEntityRepository
 
         return $pagination;
     }
+
+    public function findByTitle(string $query, int $page, ?string $sort_method)
+    {
+        $sort_method = $sort_method != "rating" ? $sort_method : "ASC";
+        $queryBuilder = $this->createQueryBuilder("v");
+        $searchTerms = $this->prepareQuery($query);
+
+        foreach ($searchTerms as $key => $term){
+            $queryBuilder
+                ->orWhere("v.title LIKE :t_" . $key)
+                ->setParameter("t_" . $key, "%" . trim($term) . '%');
+        }
+
+        $dbQuery = $queryBuilder
+            ->orderBy("v.title", $sort_method)
+            ->getQuery();
+
+        return $this->paginator->paginate($dbQuery, $page, 5);
+
+    }
+
+    private function prepareQuery(string $query): array
+    {
+        return explode(' ', $query);
+    }
+
 
     // /**
     //  * @return Video[] Returns an array of Video objects

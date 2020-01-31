@@ -1,12 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-<section class="jumbotron text-center">
-    <div class="container">
-        <h1 class="jumbotron-heading">No results were found</h1>
-        <h1 class="jumbotron-heading">Search results</h1>
-    </div>
-</section>
+    <section class="jumbotron text-center">
+        <div class="container">
+            {% if videos %}
+                <h1 class="jumbotron-heading">Search results</h1>
+                {{  include("front/includes/_sort.html.twig", {"query": query}) }}
+            {% else %}
+                <h1 class="jumbotron-heading">No results were found</h1>
+            {% endif %}
+        </div>
+    </section>
+    {% if videos %}
+        {{ include("front/includes/_videos.html.twig", {"videos": videos}) }}
+        {{ knp_pagination_render(videos) }}
+    {% endif %}
 {% endblock %}
 
 
