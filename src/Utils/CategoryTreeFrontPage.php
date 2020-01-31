@@ -19,8 +19,8 @@ class CategoryTreeFrontPage extends CategoryTreeAbstract
     public $html_ul_close = '</ul>';
 
 
-
-    public function getCategoryListAndParent($id): string {
+    public function getCategoryListAndParent($id): string
+    {
         $this->slugger = new AppExtension(); //set Instance of AppExtension for filters
         $parentData = $this->getMainParent($id);// recupere le parent si existe en fonction de l'id
 
@@ -78,5 +78,18 @@ class CategoryTreeFrontPage extends CategoryTreeAbstract
                 "name" => $this->categoriesArrayFromDb[$key]["name"]
             ];
         }
+    }
+
+    public function getChildIds(int $parent): array
+    {
+        static $ids = [];
+        foreach ($this->categoriesArrayFromDb as $val) {
+            if ($val["parent_id"] == $parent) {
+                $ids[] = $val["id"] . ",";
+                $this->getChildIds($val["id"]);
+            }
+            return $ids;
+        }
+
     }
 }

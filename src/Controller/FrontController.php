@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Repository\VideoRepository;
 use App\Utils\CategoryTreeFrontPage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,17 +20,24 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/video-list/category-{id}/{name}", name="video_list")
+     * @Route("/video-list/category-{id}/{name}/{page}", defaults={"page": "1"}, name="video_list")
      * @param $id
      * @param CategoryTreeFrontPage $categories
+     * @param VideoRepository $videoRepository
+     * @param $page
      * @return Response
      */
-    public function videoList($id, CategoryTreeFrontPage $categories)
+    public function videoList($id, CategoryTreeFrontPage $categories, VideoRepository $videoRepository, $page)
     {
         $categories->getCategoryListAndParent($id);
-        dump($categories);
+        $ids = $categories->getChildIds($id);
+        array_push($ids, $id);
+
+        $videos = $videoRepository->findByChildIds($ids, $page);
+        dump($videos);
         return $this->render('front/video_list.html.twig', [
-            "subcategories" => $categories
+            "subcategories" => $categories,
+            "videos"=>$videos
         ]);
     }
 
