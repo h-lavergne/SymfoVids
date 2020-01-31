@@ -6,9 +6,11 @@ use App\Entity\Category;
 use App\Repository\VideoRepository;
 use App\Utils\CategoryTreeFrontPage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class FrontController extends AbstractController
 {
@@ -109,10 +111,24 @@ class FrontController extends AbstractController
 
     /**
      * @Route("/login", name="login")
+     * @param AuthenticationUtils $utils
+     * @return Response
      */
-    public function login()
+    public function login(AuthenticationUtils $utils)
     {
-        return $this->render('front/login.html.twig');
+
+
+        return $this->render('front/login.html.twig', [
+            "username" => $utils->getLastUsername(),
+            "error" => $utils->getLastAuthenticationError(),
+        ]);
+    }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(): void
+    {
     }
 
 

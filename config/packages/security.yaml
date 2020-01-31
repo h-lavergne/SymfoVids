@@ -5,8 +5,9 @@ security:
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
+        in_memory: {memory: null}
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        in_database:
             entity:
                 class: App\Entity\User
                 property: email
@@ -17,11 +18,34 @@ security:
         main:
             anonymous: true
 
+            provider: in_database
+
+            form_login:
+
+                check_path: login
+                login_path: login
+                csrf_token_generator: security.csrf.token_manager
+                default_target_path: admin_main_page
+                username_parameter: _email
+
+            logout:
+                path: logout
+                target: main_page
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
+
+
+
+
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
