@@ -30,51 +30,18 @@
 
     <div class="col-md-8 order-md-1">
         <h4 class="mb-3">Register first (free)</h4>
-        <form method="POST" action="#" class="needs-validation" novalidate>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="firstName">First name</label>
-                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-                    <div class="invalid-feedback">
-                        Valid first name is required.
-                    </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="lastName">Last name</label>
-                    <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
-                    <div class="invalid-feedback">
-                        Valid last name is required.
-                    </div>
-                </div>
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.name) }}
             </div>
-
-            <div class="mb-3">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
-                <div class="invalid-feedback">
-                    Please enter a valid email address for shipping updates.
-                </div>
+            <div class="col">
+                {{ form_row(form.last_name) }}
             </div>
-
-            <div class="mb-3">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" required>
-                <div class="invalid-feedback">
-                    Please enter a valid password (min 6 characters).
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" class="form-control" id="confirm_password" required>
-                <div class="invalid-feedback">
-                    Please enter a valid password confirmation (min 6 characters).
-                </div>
-            </div>
-
-            <hr class="mb-4">
-            <a href="admin/index.php" class="btn btn-primary btn-lg btn-block" role="button">Register</a>
-        </form>
+        </div>
+        {{ form_widget(form) }}
+        <input type="submit" class="btn btn-primary w-75 my-3" value="Register" >
+        {{ form_end(form) }}
 
     </div>
 </div>
