@@ -10,16 +10,19 @@
                 <th>#</th>
                 <th>Video name</th>
                 <th>Link</th>
+                {% if is_granted("ROLE_ADMIN") %}
                 <th>Category</th>
                 <th>Delete</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
-            {% for i in 1..6 %}
+            {% for video in videos %}
                 <tr>
                     <td><?=$v?></td>
-                    <td>Video name</td>
-                    <td><a target="_blank" href="http://vimeo.com">go to video</a></td>
+                    <td>{{ video.title }}</td>
+                    <td><a target="_blank" href="http://vimeo.com">{{video.path}}</a></td>
+                    {% if is_granted("ROLE_ADMIN") %}
                     <td>
                         <form action="#" method="POST">
                             <select onchange="this.form.submit();">
@@ -33,6 +36,7 @@
                         </form>
                     </td>
                     <td><a href="#" onclick="delete_video(event,2);"><i class="fas fa-trash"></i></a></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

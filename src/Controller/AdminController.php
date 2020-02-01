@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use App\Repository\VideoRepository;
 use App\Utils\CategoryTreeAdminList;
 use App\Utils\CategoryTreeAdminOptionList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,10 +31,16 @@ class AdminController extends AbstractController
 
     /**
      * @Route("/videos", name="videos")
+     * @param VideoRepository $repository
+     * @return Response
      */
-    public function videos()
+    public function videos(VideoRepository $repository)
     {
-        return $this->render('admin/videos.html.twig');
+        $videos = $repository->findAll();
+        dump($videos);
+        return $this->render('admin/videos.html.twig', [
+            "videos" => $videos
+        ]);
     }
 
     /**
@@ -45,7 +52,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/users", name="users")
+     * @Route("/su/users", name="users")
      */
     public function users()
     {
@@ -54,7 +61,7 @@ class AdminController extends AbstractController
 
 
     /**
-     * @Route("/categories", name="categories", methods={"GET","POST"})
+     * @Route("/su/categories", name="categories", methods={"GET","POST"})
      * @param CategoryTreeAdminList $categories
      * @param Request $request
      * @param CategoryRepository $repository
@@ -80,7 +87,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/edit-category/{id}", name="edit_category", methods={"GET", "POST"})
+     * @Route("/su/edit-category/{id}", name="edit_category", methods={"GET", "POST"})
      * @param Category $category
      * @param Request $request
      * @param CategoryRepository $repository
@@ -102,7 +109,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/delete-category/{id}", name="delete_category")
+     * @Route("/su/delete-category/{id}", name="delete_category")
      * @param Category $category
      * @param EntityManagerInterface $em
      * @return RedirectResponse
@@ -117,6 +124,7 @@ class AdminController extends AbstractController
 
 
     public function getAllCategories(CategoryTreeAdminOptionList $categories, $editedCategory = null){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         $categories->getCategoryList($categories->buildTree());
         return $this->render("admin/_all_categories.html.twig", [
             "categories" => $categories,

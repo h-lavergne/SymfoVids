@@ -3,23 +3,28 @@
 {% block menu %}{% endblock %}
 {% block mainadmin %}
 
-    <h2>My profile <small><a onclick="return confirm('Are you sure?');" href="#">delete account</a></small></h2>
-    <p class="text-left">My plan - Pro. <a
-                onclick="return confirm('Are you sure? This can not be undone. Remember also to cancel payment in your PayPal account.');"
-                href="#">cancel plan</a></p>
-    <p class="text-left">My plan - Free. <a href="{{ path("payment") }}">get paid plan</a></p>
+    <h2>My profile <small><a onclick="return confirm('Are you sure?');" href="#" class="text-warning">delete account</a></small>
+    </h2>
+    {% if not is_granted("ROLE_ADMIN") %}
+        <p class="text-left">My plan - Pro. <a
+                    onclick="return confirm('Are you sure? This can not be undone. Remember also to cancel payment in your PayPal account.');"
+                    href="#">cancel plan</a></p>
+        <p class="text-left">My plan - Free. <a href="{{ path("payment") }}">get paid plan</a></p>
+    {% endif %}
 
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-6 col-sm-12">
             <form class="mt-5" method="POST" action="#">
-                <div class="form-group">
-                    <label for="vimeoapikey">Vimeo API key</label>
-                    <input required type="text" class="form-control is-invalid" id="vimeoapikey"
-                           placeholder="Enter api key">
-                    <div class="invalid-feedback">
-                        Please provide api key
+                {% if is_granted("ROLE_ADMIN") %}
+                    <div class="form-group">
+                        <label for="vimeoapikey">Vimeo API key</label>
+                        <input required type="text" class="form-control is-invalid" id="vimeoapikey"
+                               placeholder="Enter api key">
+                        <div class="invalid-feedback">
+                            Please provide api key
+                        </div>
                     </div>
-                </div>
+                {% endif %}
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input required type="text" class="form-control is-invalid" id="name" placeholder="Your name">
@@ -29,7 +34,8 @@
                 </div>
                 <div class="form-group">
                     <label for="lastname">Last name</label>
-                    <input required type="text" class="form-control is-invalid" id="lastname" placeholder="Your last name">
+                    <input required type="text" class="form-control is-invalid" id="lastname"
+                           placeholder="Your last name">
                     <div class="invalid-feedback">
                         Please provide your last name
                     </div>
@@ -43,7 +49,8 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input required type="password" class="form-control is-invalid" id="password" placeholder="Password">
+                    <input required type="password" class="form-control is-invalid" id="password"
+                           placeholder="Password">
                     <div class="invalid-feedback">
                         Please provide password (min. 6 characters)
                     </div>

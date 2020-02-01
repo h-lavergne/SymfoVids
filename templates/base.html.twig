@@ -19,7 +19,7 @@
 
     {% block customstylesheet %}{% endblock %}
 
-    <title>{% block title %}SymfoVids{% endblock  %}</title>
+    <title>{% block title %}SymfoVids{% endblock %}</title>
 
 </head>
 
@@ -43,8 +43,12 @@
             <nav class="my-2 my-md-0 mr-md-3">
                 {{ render(controller("App\\Controller\\FrontController::mainCategories")) }}
             </nav>
-            <a class="btn btn-outline-primary mr-2" href="{{ path("pricing") }}">Sign up</a>
-            <a class="btn btn-outline-primary" href="{{ path("login") }}">Sign in</a>
+            {% if app.user %}
+                <a class="btn btn-outline-primary mr-2" href="{{ path("logout") }}">Logout</a>
+            {% else %}
+                <a class="btn btn-outline-primary mr-2" href="{{ path("pricing") }}">Sign up</a>
+                <a class="btn btn-outline-primary" href="{{ path("login") }}">Sign in</a>
+            {% endif %}
         </div>
     {% endblock %}
 

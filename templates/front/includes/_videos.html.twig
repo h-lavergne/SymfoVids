@@ -15,32 +15,46 @@
                         </div>
                         <div class="card-body">
                             <h3>{{ video.title }}</h3>
+                            <div class="mb-2">
+                                <i class="fa fa-thumbs-up"><small class="text-muted">(23)</small></i>&nbsp;
+                                <i class="fa fa-thumbs-down"><small class="text-muted mr-2">(9)</small></i>
+                                <small class="text-muted">{{ video.duration }} mins</small>
+                            </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
+                                <div class="btn-group mx-auto mt-1">
 
-                                    <i class="fa fa-thumbs-up"><small class="text-muted">(23)</small></i>&nbsp;
-                                    <i class="fa fa-thumbs-down"><small class="text-muted">(9)</small></i>
-                                    <button data-toggle="tooltip" data-placement="top"
-                                            title="Click to like the video"
-                                            type="button"
-                                            class="btn btn-primary btn-outline-success btn-sm ml-1">
+                                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                                        <button data-toggle="tooltip" data-placement="top"
+                                                title="Click to like the video"
+                                                type="button"
+                                                class="btn btn-primary btn-outline-success btn-sm ml-1">
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </button>
+
+                                        <!-- <button data-toggle="tooltip" data-placement="top" title="You like the video. Click to unlike" type="button" class="btn btn-primary btn-outline-success btn-sm mr-2">
                                         <i class="fa fa-thumbs-up"></i>
-                                    </button>
-                                    <!-- <button data-toggle="tooltip" data-placement="top" title="You like the video. Click to unlike" type="button" class="btn btn-primary btn-outline-success btn-sm mr-2">
-                                    <i class="fa fa-thumbs-up"></i>
-                                    </button> -->
-                                    <button data-toggle="tooltip" data-placement="top"
-                                            title="Click to dislike the video"
-                                            type="button"
-                                            class="btn btn-primary btn-outline-danger btn-sm ml-1 mr-1">
-                                        <i class="fa fa-thumbs-down"></i>
-                                    </button>
+                                        </button> -->
+
+                                        <button data-toggle="tooltip" data-placement="top"
+                                                title="Click to dislike the video"
+                                                type="button"
+                                                class="btn btn-primary btn-outline-danger btn-sm ml-1 mr-1">
+                                            <i class="fa fa-thumbs-down"></i>
+                                        </button>
+
+                                        <a href="{{ path("video_details") }}#video_comments">Comments (32)</a>
+                                    {% else %}
+                                        <p class="text-center text-primary ml-2"><a href="{{ path("login") }}">Login</a>
+                                            or <a href="{{ path('register') }}">Signup</a> in order to like and comment</p>
+                                    {% endif %}
+
                                     <!-- <button data-toggle="tooltip" data-placement="top" title="You don't like the video. Click to undo" type="button" class="btn btn-primary btn-outline-danger btn-sm mr-2">
                                     <i class="fa fa-thumbs-down"></i>
                                     </button> -->
-                                    <a href="{{ path("video_details") }}#video_comments">Comments (32)</a>
+
                                 </div>
-                                <small class="text-muted">{{ video.duration }} mins</small>
+
                             </div>
                         </div>
                     </div>
