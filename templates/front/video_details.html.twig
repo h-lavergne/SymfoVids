@@ -1,46 +1,51 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <h1>Video title</h1>
-    <div align="center" class="embed-responsive embed-responsive-16by9">
-        <iframe class="" src="https://player.vimeo.com/video/289729765" frameborder="0" allowfullscreen></iframe>
+    <h1>{{ video.title }}</h1>
+    <div class="row justify-content-center mt-4 mb-5">
+        <div align="center" class="embed-responsive embed-responsive-16by9 w-50 h-50">
+            <iframe class="" src="{{ video.path }}" frameborder="0" allowfullscreen></iframe>
+        </div>
     </div>
 
     <hr>
 
-    <div class="row m-2">
+    <div class="row m-2 mt-5">
         <a id="video_comments"></a>
-
-        {% for i in 1..6 %}
-
-            <ul class="list-unstyled text-left">
-                <li class="media">
-                    <img class="mr-3" src="{{ asset("assets/img/user.jpg") }}" alt="Generic placeholder image">
-                    <div class="media-body">
-                        <h5 class="mt-0 mb-1"><b>John Doe</b> <small class="text-muted">added a comment <small><b>3 days
-                                        ago</b></small></small></h5>
-                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras
-                        purus
-                        odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi
-                        vulputate
-                        fringilla. Donec lacinia congue felis in faucibus.
-                    </div>
-                </li>
-            </ul>
-            <hr>
-
+        {% for comment in video.comments %}
+            {% if comment == null %}
+                <div class="w-100 text-center display-4 text-danger">There is no comment for this video</div>
+            {% else %}
+                <div class="col-12">
+                    <ul class="list-unstyled text-left">
+                        <li class="media">
+                            <img class="mr-3" src="{{ asset("assets/img/user.jpg") }}" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <div class="w-100 row align-items-center ml-2">
+                                    <h5>{{ comment.user.name ~ " " ~ comment.user.lastname }}</h5>
+                                    <small class="ml-2 text-dark"> comment added the {{ comment.getCreatedAt()|date("d/m/y") }}</small>
+                                </div>
+                                <div class="w-75 row align-items-center ml-2">
+                                    <p>{{ comment.content }}</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+            {% endif %}
         {% endfor %}
 
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <form method="POST" action="{{ path("video_details") }}#video_comments">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-6 col-sm-8">
+            <form method="POST" action="{{ path("video_details", {"id": video.id}) }}">
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Add a comment</label>
                     <textarea required class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary w-50">Add</button>
 
             </form>
         </div>

@@ -36,6 +36,7 @@
                                         <i class="fa fa-thumbs-up"></i>
                                         </button> -->
 
+                                        <div class="w-100">
                                         <button data-toggle="tooltip" data-placement="top"
                                                 title="Click to dislike the video"
                                                 type="button"
@@ -43,10 +44,20 @@
                                             <i class="fa fa-thumbs-down"></i>
                                         </button>
 
-                                        <a href="{{ path("video_details") }}#video_comments">Comments (32)</a>
+                                        <a href="{{ path("video_details", {"id": video.id}) }}">Comments
+                                            ({{ video.comments.count }})</a>
+                                    </div>
+
                                     {% else %}
-                                        <p class="text-center text-primary ml-2"><a href="{{ path("login") }}">Login</a>
-                                            or <a href="{{ path('register') }}">Signup</a> in order to like and comment</p>
+                                        <div>
+                                            <p class="text-center text-primary ml-2 w-100">
+                                                <a href="{{ path("login") }}">Login</a> or
+                                                <a href="{{ path('register') }}">Signup</a>
+                                                in order to like and comment
+                                            </p>
+
+                                            <p>Comments ({{ video.comments.count }})</p>
+                                        </div>
                                     {% endif %}
 
                                     <!-- <button data-toggle="tooltip" data-placement="top" title="You don't like the video. Click to undo" type="button" class="btn btn-primary btn-outline-danger btn-sm mr-2">

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\User;
+use App\Entity\Video;
 use App\Form\UserType;
 use App\Repository\VideoRepository;
 use App\Utils\CategoryTreeFrontPage;
@@ -31,36 +32,38 @@ class FrontController extends AbstractController
     /**
      * @Route("/video-list/category-{id}/{name}/{page}", defaults={"page": "1"}, name="video_list")
      * @param $id
-     * @param CategoryTreeFrontPage $categories
-     * @param VideoRepository $videoRepository
      * @param $page
+     * @param CategoryTreeFrontPage $categories
      * @param Request $request
      * @return Response
      */
-    public function videoList($id, CategoryTreeFrontPage $categories, VideoRepository $videoRepository, $page, Request $request)
+    public function videoList($id, $page, CategoryTreeFrontPage $categories, Request $request)
     {
-        $categories->getCategoryListAndParent($id);
-        // recupere les id enfant
         $ids = $categories->getChildIds($id);
-        //Permet d'empiler un ou plusieurs element a la fin d'un tableau
-        array_push($ids, $id); // envoie id a la fin de ids
+        array_push($ids, $id);
 
+        $videos = $this->getDoctrine()
+            ->getRepository(Video::class)
+            ->findByChildIds($ids ,$page, $request->get("sortBy"));
 
-        //check func
-        $videos = $videoRepository->findByChildIds($ids, $page, $request->get("sortBy"));
-
-        return $this->render('front/video_list.html.twig', [
-            "subcategories" => $categories,
-            "videos" => $videos
+        $categories->getCategoryListAndParent($id);
+        return $this->render('front/video_list.html.twig',[
+            'subcategories' => $categories,
+            'videos'=>$videos
         ]);
     }
 
     /**
-     * @Route("/video-details", name="video_details")
+     * @Route("/video-details/{id}", name="video_details")
+     * @param Video $video
+     * @return Response
      */
-    public function videoDetails()
+    public function videoDetails(Video $video)
     {
-        return $this->render('front/video_details.html.twig');
+//        dd($video);
+        return $this->render('front/video_details.html.twig', [
+            "video" => $video
+        ]);
     }
 
 
@@ -180,9 +183,11 @@ class FrontController extends AbstractController
 
     public function mainCategories()
     {
-        $categories = $this->getDoctrine()->getRepository(Category::class)->findBy(["parent" => null], ["name" => "ASC"]);
-        return $this->render("front/_main_categories.html.twig", [
-            "categories" => $categories
+        $categories = $this->getDoctrine()
+            ->getRepository(Category::class)
+            ->findBy(['parent'=>null], ['name'=>'ASC']);
+        return $this->render('front/_main_categories.html.twig',[
+            'categories'=>$categories
         ]);
     }
 }
