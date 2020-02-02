@@ -40,7 +40,7 @@ class Category
     private $sub_category;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="categories")
+     * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="category")
      */
     private $videos;
 

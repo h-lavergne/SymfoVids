@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Entity\Video;
 use App\Form\UserType;
@@ -11,6 +12,7 @@ use App\Utils\CategoryTreeFrontPage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,15 +56,46 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/video-details/{id}", name="video_details")
+     * @Route("/video-details/{video}", name="video_details")
+     * @param VideoRepository $repository
      * @param Video $video
      * @return Response
      */
-    public function videoDetails(Video $video)
+    public function videoDetails(VideoRepository $repository,Video $video)
     {
 //        dd($video);
+//        $this->denyAccessUnlessGranted("IS_AUTHENTICATED_REMEMBERED");
+
         return $this->render('front/video_details.html.twig', [
-            "video" => $video
+            "video" => $repository->videoDetails($video)
+        ]);
+    }
+
+    /**
+     * @Route("/new-comment/{video}", methods={"POST"}, name="new_comment")
+     * @param Video $video
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function newComment(Video $video, Request $request)
+    {
+        $this->denyAccessUnlessGranted("IS_AUTHENTICATED_REMEMBERED");
+
+        $video = $this->getDoctrine()->getRepository(Video::class)->find($video);
+        if (!empty(trim($request->request->get("comment"))))
+        {
+            $comment = new Comment();
+            $comment->setContent($request->request->get("comment"));
+            $comment->setUser($this->getUser());
+            $comment->setVideo($video);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($comment);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute("video_details",[
+            "video" => $video->getId()
         ]);
     }
 

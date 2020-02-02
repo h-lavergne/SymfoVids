@@ -44,8 +44,7 @@
                                             <i class="fa fa-thumbs-down"></i>
                                         </button>
 
-                                        <a href="{{ path("video_details", {"id": video.id}) }}">Comments
-                                            ({{ video.comments.count }})</a>
+                                        <a href="{{ path("video_details", {"video": video.id}) }}" class="test">Comments ({{ video.comments.count }})</a>
                                     </div>
 
                                     {% else %}
@@ -56,7 +55,8 @@
                                                 in order to like and comment
                                             </p>
 
-                                            <p>Comments ({{ video.comments.count }})</p>
+                                            <p><a href="{{ path("video_details", {"video": video.id}) }}">Comments
+                                                    ({{ video.comments.count }})</a></p>
                                         </div>
                                     {% endif %}
 

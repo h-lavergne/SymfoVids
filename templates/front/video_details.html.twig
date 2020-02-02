@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <h1>{{ video.title }}</h1>
+    <h1 class="mt-5">{{ video.title }}</h1>
     <div class="row justify-content-center mt-4 mb-5">
-        <div align="center" class="embed-responsive embed-responsive-16by9 w-50 h-50">
+        <div align="center" class="embed-responsive embed-responsive-16by9 w-75 h-75">
             <iframe class="" src="{{ video.path }}" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
@@ -23,7 +23,8 @@
                             <div class="media-body">
                                 <div class="w-100 row align-items-center ml-2">
                                     <h5>{{ comment.user.name ~ " " ~ comment.user.lastname }}</h5>
-                                    <small class="ml-2 text-dark"> comment added the {{ comment.getCreatedAt()|date("d/m/y") }}</small>
+                                    <small class="ml-2 text-dark"> comment
+                                        added {{ comment.getCreatedAt()|ago }}</small>
                                 </div>
                                 <div class="w-75 row align-items-center ml-2">
                                     <p>{{ comment.content }}</p>
@@ -40,14 +41,16 @@
 
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-6 col-sm-8">
-            <form method="POST" action="{{ path("video_details", {"id": video.id}) }}">
-                <div class="form-group">
-                    <label for="exampleFormControlTextarea1">Add a comment</label>
-                    <textarea required class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary w-50">Add</button>
-
-            </form>
+                <form method="POST" action="{{ path("new_comment", {"video": video.id}) }}">
+                    <div class="form-group">
+                        <label for="comment">Add a comment</label>
+                        <textarea required class="form-control" id="comment" name="comment" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-50">Add</button>
+            {% if not app.user %}
+                <div class="text-dark my-3">You need to be <a href="{{ path("login") }}">logged</a> in order to send comment</div>
+            {% endif %}
+                </form>
         </div>
     </div>
 
