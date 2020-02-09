@@ -6,6 +6,7 @@ use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
+use function foo\func;
 
 /**
  * @method Video|null find($id, $lockMode = null, $lockVersion = null)
@@ -26,15 +27,31 @@ class VideoRepository extends ServiceEntityRepository
     {
 
         //filtre si ce n'est pas par rating alors par ASC
-        $sort_method = $sort_method != "rating" ? $sort_method : "ASC";
+        if ($sort_method != "rating"){
+            $dbQuery = $this->createQueryBuilder('v')
+                ->andWhere("v.category IN (:val)")//cherche si v.category existe dans le tableau d'id as values
+                ->leftJoin("v.comments", "c")
+//                ->addSelect("c")
+                ->leftJoin("v.usersThatLike", "l")
+                ->leftJoin("v.usersThatDontLike", "d")
+                ->addSelect("c", "l", "d")
+                ->setParameter('val', $value)//bind val
+                ->orderBy("v.title", $sort_method); // sql orderBy
+        }
+        else {
+            $dbQuery = $this->createQueryBuilder('v')
+                ->addSelect("COUNT(l) AS HIDDEN likes")//cherche si v.category existe dans le tableau d'id as values
+                ->leftJoin("v.usersThatLike", "l")
+                ->andWhere("v.category IN (:val)")
+                ->setParameter("val", $value)
+                ->groupBy("v")
+                ->orderBy("likes", "DESC");
+        }
 
-        $dbQuery = $this->createQueryBuilder('v')
-            ->andWhere("v.category IN (:val)")//cherche si v.category existe dans le tableau d'id as values
-            ->setParameter('val', $value)//bind val
-            ->orderBy("v.title", $sort_method) // sql orderBy
-            ->getQuery();
+        $dbQuery->getQuery();
 
-        $pagination = $this->paginator->paginate($dbQuery, $page, 5);
+
+        $pagination = $this->paginator->paginate($dbQuery, $page, Video::perPage);
 
         return $pagination;
     }
@@ -42,7 +59,6 @@ class VideoRepository extends ServiceEntityRepository
     public function findByTitle(string $query, int $page, ?string $sort_method)
     {
         //filtre si ce n'est pas par rating alors par ASC
-        $sort_method = $sort_method != "rating" ? $sort_method : "ASC";
         $queryBuilder = $this->createQueryBuilder("v");
         $searchTerms = $this->prepareQuery($query);
 
@@ -55,19 +71,36 @@ class VideoRepository extends ServiceEntityRepository
             dump($term);
         }
 
+        if ($sort_method != "rating") {
+            $dbQuery = $queryBuilder
+                ->orderBy("v.title", $sort_method)
+                ->leftJoin("v.comments", "c")
+                ->leftJoin("v.usersThatLike", "l")
+                ->leftJoin("v.usersThatDontLike", "d")
+                ->addSelect("c", "l", "d")
+                ->getQuery();
+        }
+        else {
+            $dbQuery = $queryBuilder
+                ->addSelect("COUNT(l) AS HIDDEN likes", "c")
+                ->leftJoin("v.usersThatLike", "l")
+                ->leftJoin("v.comments", "c")
+                ->groupBy("v", "c")
+                ->orderBy("likes", "DESC")
+                ->getQuery();
+        }
 
-        $dbQuery = $queryBuilder
-            ->orderBy("v.title", $sort_method)
-            ->getQuery();
-
-        return $this->paginator->paginate($dbQuery, $page, 5);
+        return $this->paginator->paginate($dbQuery, $page, Video::perPage);
 
     }
 
     private function prepareQuery(string $query): array
     {
         //va creer un tableau avec chaque caractere delimité par un espace
-        return explode(' ', $query);
+        $terms = array_unique(explode(" ", $query));
+        return array_filter($terms, function ($term){
+            return 2 <= mb_strlen($term);
+        });
     }
 
 
