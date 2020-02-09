@@ -1,0 +1,6 @@
+.click-to-like-video,
+.click-to-unlike-video,
+.click-to-dislike-video,
+.click-to-undo-dislike-video {
+    display: none;
+}
