@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin\SuperAdmin;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
-use App\Repository\VideoRepository;
 use App\Utils\CategoryTreeAdminList;
 use App\Utils\CategoryTreeAdminOptionList;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,56 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/admin")
- */
-class AdminController extends AbstractController
+class CategoriesController extends AbstractController
 {
-    /**
-     * @Route("", name="admin_main_page")
-     */
-    public function index()
-    {
-        return $this->render('admin/my_profile.html.twig');
-    }
-
-
-    /**
-     * @Route("/videos", name="videos")
-     * @param VideoRepository $repository
-     * @return Response
-     */
-    public function videos(VideoRepository $repository)
-    {
-        if ($this->isGranted("ROLE_ADMIN")) {
-            $videos = $repository->findAll();
-        }
-        else {
-            $videos = $this->getUser()->getLikedVideos();
-        }
-
-        return $this->render('admin/videos.html.twig', [
-            "videos" => $videos
-        ]);
-    }
-
-    /**
-     * @Route("/upload_video", name="upload_video")
-     */
-    public function uploadVideo()
-    {
-        return $this->render('admin/upload_video.html.twig');
-    }
-
-    /**
-     * @Route("/su/users", name="users")
-     */
-    public function users()
-    {
-        return $this->render('admin/users.html.twig');
-    }
-
-
     /**
      * @Route("/su/categories", name="categories", methods={"GET","POST"})
      * @param CategoryTreeAdminList $categories
@@ -81,7 +32,7 @@ class AdminController extends AbstractController
         $form = $this->createForm(CategoryType::class, $category);
 
 
-        if ($this->saveCategory($form, $category, $request, $repository, $em)){
+        if ($this->saveCategory($form, $category, $request, $repository, $em)) {
             return $this->redirectToRoute("categories");
         }
 
@@ -103,7 +54,7 @@ class AdminController extends AbstractController
     {
         $form = $this->createForm(CategoryType::class, $category);
 
-        if ($this->saveCategory($form, $category, $request, $repository, $em)){
+        if ($this->saveCategory($form, $category, $request, $repository, $em)) {
             return $this->redirectToRoute("categories");
         }
 
@@ -126,22 +77,12 @@ class AdminController extends AbstractController
         return $this->redirectToRoute("categories");
     }
 
-
-
-    public function getAllCategories(CategoryTreeAdminOptionList $categories, $editedCategory = null){
-        $this->denyAccessUnlessGranted("ROLE_ADMIN");
-        $categories->getCategoryList($categories->buildTree());
-        return $this->render("admin/_all_categories.html.twig", [
-            "categories" => $categories,
-            "editedCategory" => $editedCategory
-        ]);
-    }
-
-    private function saveCategory($form, $category, $request, $repository, $em){
+    private function saveCategory($form, $category, $request, $repository, $em)
+    {
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $parent = $repository->find($request->request->get("category")["parent"]);
             $category->setParent($parent);
@@ -153,6 +94,5 @@ class AdminController extends AbstractController
         }
 
         return false;
-
     }
 }

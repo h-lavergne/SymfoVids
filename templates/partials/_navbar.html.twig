@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <h5 class="my-0 mr-md-auto font-weight-normal"><a href="{{ path("main_page") }}">Symfo Vids</a></h5>
+    <button class="navbar-toggler bg-dark" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <form method="GET" class="form-inline my-0 ml-auto" action="{{ path("search_results") }}">
+            <input name="query"
+                   class="form-control mr-sm-2"
+                   type="search"
+                   placeholder="video title"
+                   aria-label="Search video">
+
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search video</button>
+        </form>
+
+        <ul class="navbar-nav ml-auto">
+
+            {{ render(controller("App\\Controller\\FrontController::mainCategories")) }}
+
+            {% if app.user %}
+                <a class="btn btn-outline-primary mr-2 ml-4 " href="{{ path("admin_main_page") }}">My account</a>
+                <a class="btn btn-outline-primary mr-2" href="{{ path("logout") }}">Logout</a>
+            {% else %}
+                    <a class="btn btn-outline-primary mx-2" href="{{ path("pricing") }}">Sign up</a>
+                    <a class="btn btn-outline-primary mx-2" href="{{ path("login") }}">Sign in</a>
+            {% endif %}
+        </ul>
+
+    </div>
+</nav>
