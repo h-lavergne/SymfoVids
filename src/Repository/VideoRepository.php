@@ -68,7 +68,6 @@ class VideoRepository extends ServiceEntityRepository
                 ->orWhere("v.title LIKE :t_" . $key)//cherche element dans title des videos
                     //assigne a "t_" -> trim(term), % -> joker = n'importe quel caractere
                 ->setParameter("t_" . $key, "%" . trim($term) . '%');//trim supprime les espaces en debut et fin de chaine
-            dump($term);
         }
 
         if ($sort_method != "rating") {

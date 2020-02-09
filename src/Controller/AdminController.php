@@ -36,8 +36,13 @@ class AdminController extends AbstractController
      */
     public function videos(VideoRepository $repository)
     {
-        $videos = $repository->findAll();
-        dump($videos);
+        if ($this->isGranted("ROLE_ADMIN")) {
+            $videos = $repository->findAll();
+        }
+        else {
+            $videos = $this->getUser()->getLikedVideos();
+        }
+
         return $this->render('admin/videos.html.twig', [
             "videos" => $videos
         ]);

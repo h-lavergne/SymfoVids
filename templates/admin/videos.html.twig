@@ -19,9 +19,9 @@
             <tbody>
             {% for video in videos %}
                 <tr>
-                    <td><?=$v?></td>
+                    <td>{{ loop.index }}</td>
                     <td>{{ video.title }}</td>
-                    <td><a target="_blank" href="http://vimeo.com">{{video.path}}</a></td>
+                    <td><a target="_blank" href="{{ path("video_details", {"video": video.id}) }}">go to video</a></td>
                     {% if is_granted("ROLE_ADMIN") %}
                     <td>
                         <form action="#" method="POST">
